@@ -25,7 +25,7 @@ index 96d13d1..dda9ea8 100644
 +				vi_back('\033');
 +				return 0;
 +			}
-+		} else /* Not an arrow sequence so we abbort */
++		} else /* Not an arrow sequence so we abort */
 +			return 0;
 +		break;
  	case '\n':

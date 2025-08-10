@@ -216,6 +216,7 @@ static int ec_search(char *loc, char *cmd, char *arg);
 
 static int ex_range(char **num, int n, int *row)
 {
+	int no;
 	switch ((unsigned char) **num) {
 	case '.':
 		++*num;
@@ -226,7 +227,7 @@ static int ex_range(char **num, int n, int *row)
 		break;
 	case '\'':
 		if (lbuf_jump(xb, (unsigned char) *++(*num),
-				&n, row ? &n : NULL))
+				&n, row ? &n : &no))
 			return -1;
 		++*num;
 		break;
@@ -253,7 +254,7 @@ static int ex_range(char **num, int n, int *row)
 #define ex_region(loc, beg, end) ex_oregion(loc, beg, end, NULL, NULL)
 static int ex_oregion(char *loc, int *beg, int *end, int *o1, int *o2)
 {
-	int naddr = 0;
+	int vaddr = 0, haddr = 0, ooff = xoff;
 	if (!strcmp("%", loc) || !lbuf_len(xb)) {
 		*beg = 0;
 		*end = MAX(0, lbuf_len(xb));
@@ -264,14 +265,14 @@ static int ex_oregion(char *loc, int *beg, int *end, int *o1, int *o2)
 			loc++;
 			if (loc[-1] == ',')
 				goto skip;
-			if (o1 && *o2 >= 0)
-				*o1 = *o2;
-			xoff = ex_range(&loc, xoff, naddr ? beg : &xrow);
-			if (o2)
+			xoff = ex_range(&loc, ooff, vaddr ? beg : &xrow);
+			if (o2 && haddr++ % 2)
 				*o2 = xoff;
+			else if (o1)
+				*o1 = xoff;
 		} else {
 			skip:
-			if (naddr++ % 2)
+			if (vaddr++ % 2)
 				*end = ex_range(&loc, xrow, NULL) + 1;
 			else
 				*beg = ex_range(&loc, xrow, NULL);
@@ -279,14 +280,14 @@ static int ex_oregion(char *loc, int *beg, int *end, int *o1, int *o2)
 		while (*loc && *loc != ';' && *loc != ',')
 			loc++;
 	}
-	if (!naddr) {
+	if (!vaddr) {
 		*beg = xrow;
 		*end = MIN(lbuf_len(xb), xrow + 1);
 		return 0;
 	}
 	if (*beg < 0 || *beg >= lbuf_len(xb))
 		return 1;
-	if (naddr < 2)
+	if (vaddr < 2)
 		*end = *beg + 1;
 	else if (*end <= *beg || *end > lbuf_len(xb))
 		return 1;
@@ -339,7 +340,7 @@ static int ec_buffer(char *loc, char *cmd, char *arg)
 			char c = ex_buf == bufs+i ? '%' : ' ';
 			c = ex_pbuf == bufs+i ? '#' : c;
 			snprintf(ln, LEN(ln), "%d %c %s", i,
-				c + (char)lbuf_modified(bufs[i].lb), bufs[i].path);
+				c + (char)bufs[i].lb->modified, bufs[i].path);
 			ex_print(ln)
 		}
 		return 0;
@@ -359,7 +360,7 @@ static int ec_buffer(char *loc, char *cmd, char *arg)
 static int ec_quit(char *loc, char *cmd, char *arg)
 {
 	for (int i = 0; !strchr(cmd, '!') && i < xbufcur; i++)
-		if ((xquit < 0 || xgrec < 2) && lbuf_modified(bufs[i].lb)) {
+		if ((xquit < 0 || xgrec < 2) && bufs[i].lb->modified) {
 			ex_print("buffers modified")
 			return 1;
 		}
@@ -409,7 +410,7 @@ static int ec_edit(char *loc, char *cmd, char *arg)
 		bufs_switchwft(fd)
 		return 0;
 	} else if (xbufcur == xbufsmax && !strchr(cmd, '!') &&
-			lbuf_modified(bufs[xbufsmax - 1].lb)) {
+			bufs[xbufsmax - 1].lb->modified) {
 		ex_print("last buffer modified")
 		return 1;
 	} else if (len || !xbufcur || !strchr(cmd, '!')) {
@@ -535,7 +536,7 @@ static int ec_write(char *loc, char *cmd, char *arg)
 	char *ibuf;
 	int beg, end;
 	path = arg[0] ? arg : ex_path;
-	if (cmd[0] == 'x' && !lbuf_modified(xb))
+	if (cmd[0] == 'x' && !xb->modified)
 		return ec_quit("", cmd, "");
 	if (ex_region(loc, &beg, &end))
 		return 2;
@@ -620,19 +621,20 @@ static int ec_insert(char *loc, char *cmd, char *arg)
 	int o1 = -1, o2 = -1;
 	if (ex_oregion(loc, &beg, &end, &o1, &o2))
 		return 2;
-	char *ln = o2 >= 0 ? lbuf_get(xb, beg) : NULL;
+	char *ln = o1 >= 0 ? lbuf_get(xb, beg) : NULL;
 	sbuf_smake(sb, ln && cmd[0] == 'c' ? lbuf_s(ln)->len + xcols : xcols)
 	if (cmd[0] == 'a' && (beg + 1 <= lbuf_len(xb)))
 		beg++;
 	else if (cmd[0] == 'i')
 		end = beg;
 	else if (ln) {
-		if (o1 >= 0)
-			swap(&o1, &o2);
-		if (rstate->s == ln)
-			n = rstate->chrs[o2] - ln;
-		else
-			n = uc_chr(ln, o2) - ln;
+		if (rstate->s == ln) {
+			o1 = MIN(o1, rstate->n);
+			n = rstate->chrs[o1] - ln;
+		} else
+			n = uc_chrn(ln, o1, &o1) - ln;
+		lbuf_mark(xb, '*', beg, o1);
+		xoff = o1;
 		sb->s_n = n;
 		ps = n;
 	}
@@ -650,7 +652,7 @@ static int ec_insert(char *loc, char *cmd, char *arg)
 	if (vi_insmov != TK_CTL('c')) {
 		if (ln && cmd[0] == 'c') {
 			memcpy(sb->s, ln, n);
-			ln = o1 >= 0 ? uc_chr(ln + n, o1) : ln + n;
+			ln = o2 > o1 ? uc_chr(ln + n, o2 - o1) : ln + n;
 			sbufn_str(sb, ln)
 		} else
 			sbufn_chr(sb, xvis & 2 ? 0 : '\n')

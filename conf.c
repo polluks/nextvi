@@ -5,16 +5,18 @@
 int conf_mode = 0600;
 #define FTGEN(ft) static char ft_##ft[] = #ft;
 #define FT(ft) ft_##ft
-FTGEN(c) FTGEN(roff) FTGEN(tex) FTGEN(msg)
-FTGEN(mk) FTGEN(sh) FTGEN(py) FTGEN(js)
+FTGEN(c) FTGEN(s) FTGEN(roff) FTGEN(tex) FTGEN(msg)
+FTGEN(mk) FTGEN(tcl) FTGEN(sh) FTGEN(py) FTGEN(js)
 FTGEN(html) FTGEN(diff)
 
 struct filetype fts[] = {
 	{FT(c), "\\.(c|h|cpp|hpp|cc|cs)$"},			/* C */
+	{FT(s), "\\.(s|a48)$"},                           	/* assembler */
 	{FT(roff), "\\.(ms|tr|roff|tmac|txt|[1-9])$"},		/* troff */
 	{FT(tex), "\\.tex$"},					/* tex */
 	{FT(msg), "letter$|mbox$|mail$"},			/* email */
 	{FT(mk), "[Mm]akefile$|\\.mk$"},			/* makefile */
+	{FT(tcl), "Portfile$"},                           	/* tcl */
 	{FT(sh), "\\.(ba|z)?sh$|(ba|z|k)shrc$|profile$"},	/* shell script */
 	{FT(py), "\\.py$"},					/* python */
 	{FT(js), "\\.js$"},					/* javascript */
@@ -69,6 +71,9 @@ default|break|continue))\\>", A(GR1, BL1 | SYN_BD, YE1)},
 	{FT(c), "'(?:[^\\\\]|\\\\.|\\\\x[0-9a-fA-F]{1,2}|\\\\[0-9]+?)'", A(MA)},
 	{FT(c), "[-+.]?\\<(?:0[xX][0-9a-fA-FUL]+|[0-9]+\\.?[0-9eEfFuULl]+|[0-9]+)\\>", A(RE1)},
 
+	{FT(s), ";.*", A(BL | SYN_IT)},
+	{FT(s), "[.]([a-zA-Z0-9_]+([ \t]*<.*>)?)", A(IN, SYN_BD)},
+
 	{FT(roff), NULL, A(CY1 | SYN_BD | SYN_SO), 0, 2},
 	{FT(roff), NULL, A(RE1), 0, 1},
 	{FT(roff), "^[.'][ \t]*(([sS][hH].*)|(de) (.*)|([^ \t\\\\]{2,}))?.*",
@@ -101,6 +106,9 @@ default|break|continue))\\>", A(GR1, BL1 | SYN_BD, YE1)},
 	{FT(mk), "\\$[\\({][a-zA-Z0-9_]+[\\)}]|\\$\\$", A(YE)},
 	{FT(mk), "#.*", A(GR | SYN_IT)},
 	{FT(mk), "([A-Za-z_%.\\-]+):", A(IN, SYN_BD)},
+
+	{FT(tcl), "#.*", A(BL | SYN_IT)},
+	{FT(tcl), "\\$[\\({][a-zA-Z0-9_]+[\\)}]", A(IN, SYN_BD)},
 
 	{FT(sh), NULL, A(CY1 | SYN_BD | SYN_SO), 0, 2},
 	{FT(sh), NULL, A(RE1), 0, 1},

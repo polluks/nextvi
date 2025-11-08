@@ -1,7 +1,9 @@
---- conf.c.bak	2025-08-22 22:52:07
-+++ conf.c	2025-08-23 00:18:41
+diff --git a/conf.c b/conf.c
+index 4b0a55f..2e988cf 100644
+--- a/conf.c
++++ b/conf.c
 @@ -5,16 +5,18 @@
- int conf_mode = 0600;
+ const int conf_mode = 0600;
  #define FTGEN(ft) static char ft_##ft[] = #ft;
  #define FT(ft) ft_##ft
 -FTGEN(c) FTGEN(roff) FTGEN(tex) FTGEN(msg)
@@ -21,23 +23,23 @@
  	{FT(sh), "\\.(ba|z)?sh$|(ba|z|k)shrc$|profile$"},	/* shell script */
  	{FT(py), "\\.py$"},					/* python */
  	{FT(js), "\\.js$"},					/* javascript */
-@@ -69,6 +71,9 @@
- 	{FT(c), "'(?:[^\\\\]|\\\\.|\\\\x[0-9a-fA-F]{1,2}|\\\\[0-9]+?)'", A(MA)},
- 	{FT(c), "[-+.]?\\<(?:0[xX][0-9a-fA-FUL]+|[0-9]+\\.?[0-9eEfFuULl]+|[0-9]+)\\>", A(RE1)},
+@@ -81,6 +83,9 @@ default|break|continue))\\>", A(GR1, BL1 | SYN_BD, YE1)},
+ 		A(MA | SYN_IGN, MA | SYN_BS | SYN_SATT, MA | SYN_BE | SYN_EATT, 2, IN, CY1), 3},
+ 	{FT(c), "(\\?).+?(:)", A(SYN_IGN, YE | SYN_SATT, YE | SYN_SATT, 2, IN, CY1), 4},
  
 +	{FT(s), ";.*", A(BL | SYN_IT)},
 +	{FT(s), "[.]([a-zA-Z0-9_]+([ \t]*<.*>)?)", A(IN, SYN_BD)},
 +
- 	{FT(roff), NULL, A(CY1 | SYN_BD | SYN_SO), 0, 2},
- 	{FT(roff), NULL, A(RE1), 0, 1},
+ 	{FT(roff), NULL, A(CY1 | SYN_BD), 1, 2},
  	{FT(roff), "^[.'][ \t]*(([sS][hH].*)|(de) (.*)|([^ \t\\\\]{2,}))?.*",
-@@ -102,6 +107,9 @@
+ 		A(BL, IN, MA | SYN_BD, BL | SYN_BD, MA | SYN_BD, BL | SYN_BD), 1},
+@@ -114,6 +119,9 @@ default|break|continue))\\>", A(GR1, BL1 | SYN_BD, YE1)},
  	{FT(mk), "#.*", A(GR | SYN_IT)},
  	{FT(mk), "([A-Za-z_%.\\-]+):", A(IN, SYN_BD)},
  
 +	{FT(tcl), "#.*", A(BL | SYN_IT)},
 +	{FT(tcl), "\\$[\\({][a-zA-Z0-9_]+[\\)}]", A(IN, SYN_BD)},
 +
- 	{FT(sh), NULL, A(CY1 | SYN_BD | SYN_SO), 0, 2},
+ 	{FT(sh), NULL, A(CY1 | SYN_BD), 1, 2},
  	{FT(sh), NULL, A(RE1), 0, 1},
  	{FT(sh), "\\<(?:break|case|continue|do|done|elif|else|esac|fi|for|if|in|then|until|while)\\>",

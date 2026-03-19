@@ -1,29 +1,32 @@
 diff --git a/conf.c b/conf.c
-index 4fcc1a8..dec7a70 100644
+index 45585e3..c201e8c 100644
 --- a/conf.c
 +++ b/conf.c
-@@ -5,16 +5,18 @@
+@@ -5,8 +5,8 @@
  const int conf_mode = 0600;
- #define FTGEN(ft) static char ft_##ft[] = #ft;
- #define FT(ft) ft_##ft
--FTGEN(c) FTGEN(roff) FTGEN(tex) FTGEN(msg)
+ #define FTGEN(ft) static char ft##_ft[] = #ft;
+ #define FT(ft) ft##_ft
+-FTGEN(c) FTGEN(roff) FTGEN(tex) FTGEN(mbox)
 -FTGEN(mk) FTGEN(sh) FTGEN(py) FTGEN(js)
-+FTGEN(c) FTGEN(s) FTGEN(roff) FTGEN(tex) FTGEN(msg)
++FTGEN(c) FTGEN(s) FTGEN(roff) FTGEN(tex) FTGEN(mbox)
 +FTGEN(mk) FTGEN(tcl) FTGEN(sh) FTGEN(py) FTGEN(js)
  FTGEN(html) FTGEN(diff) FTGEN(go)
  
+ char _ft[] = "/";	/* default hl */
+@@ -22,10 +22,12 @@ char msg_ft[] = "/>";	/* ex message (is never '\n' terminated) */
+ 
  struct filetype fts[] = {
  	{FT(c), "\\.(c|h|cpp|hpp|cc|cs)$"},			/* C */
-+	{FT(s), "\\.(s|a48)$"},					/* assembler */
++	{FT(s), "\\.(s|a48)$"},                                 /* assembler */
  	{FT(roff), "\\.(ms|tr|roff|tmac|txt|[1-9])$"},		/* troff */
  	{FT(tex), "\\.tex$"},					/* tex */
- 	{FT(msg), "letter$|mbox$|mail$"},			/* email */
+ 	{FT(mbox), "letter$|mbox$|mail$"},			/* email */
  	{FT(mk), "[Mm]akefile$|\\.mk$"},			/* makefile */
-+	{FT(tcl), "Portfile$"},					/* tcl */
++	{FT(tcl), "Portfile$"},                                 /* tcl */
  	{FT(sh), "\\.(ba|z)?sh$|(ba|z|k)shrc$|profile$"},	/* shell script */
  	{FT(py), "\\.py$"},					/* python */
  	{FT(js), "\\.js$"},					/* javascript */
-@@ -82,6 +84,9 @@ default|break|continue))\\>", A(GR1, BL1 | SYN_BD, YE1)},
+@@ -93,6 +95,9 @@ default|break|continue))\\>", A(GR1, BL1 | SYN_BD, YE1)},
  		A(MA | SYN_IGN, MA | SYN_BS | SYN_SATT, MA | SYN_BE | SYN_EATT, 2, IN, CY1), 3},
  	{FT(c), "(\\?).+?(:)", A(SYN_IGN, YE | SYN_SATT, YE | SYN_SATT, 2, IN, CY1), 4},
  
@@ -33,7 +36,7 @@ index 4fcc1a8..dec7a70 100644
  	{FT(roff), NULL, A(CY1 | SYN_BD), 1, 2},
  	{FT(roff), "^[.'][ \t]*(([sS][hH].*)|(de) (.*)|([^ \t\\\\]{2,}))?.*",
  		A(BL, IN, MA | SYN_BD, BL | SYN_BD, MA | SYN_BD, BL | SYN_BD), 1},
-@@ -115,6 +120,9 @@ default|break|continue))\\>", A(GR1, BL1 | SYN_BD, YE1)},
+@@ -126,6 +131,9 @@ default|break|continue))\\>", A(GR1, BL1 | SYN_BD, YE1)},
  	{FT(mk), "#.*", A(GR | SYN_IT)},
  	{FT(mk), "([A-Za-z_%.\\-]+):", A(IN, SYN_BD)},
  

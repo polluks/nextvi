@@ -41,7 +41,7 @@ index 45585e3..c201e8c 100644
  	{FT(mk), "([A-Za-z_%.\\-]+):", A(IN, SYN_BD)},
  
 +	{FT(tcl), "#.*", A(BL | SYN_IT)},
-+	{FT(tcl), "\\$[\\({][a-zA-Z0-9_]+[\\)}]", A(IN, SYN_BD)},
++	{FT(tcl), "\\$[\\{][a-zA-Z0-9_]+[\\}]", A(IN, SYN_BD)},
 +
  	{FT(sh), NULL, A(CY1 | SYN_BD), 1, 2},
  	{FT(sh), NULL, A(RE1), 0, 1},

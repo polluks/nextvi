@@ -10,7 +10,7 @@ index 45585e3..c201e8c 100644
 -FTGEN(mk) FTGEN(sh) FTGEN(py) FTGEN(js)
 +FTGEN(c) FTGEN(s) FTGEN(roff) FTGEN(tex) FTGEN(mbox)
 +FTGEN(mk) FTGEN(tcl) FTGEN(sh) FTGEN(py) FTGEN(js)
- FTGEN(html) FTGEN(diff) FTGEN(go)
+ FTGEN(html) FTGEN(diff) FTGEN(go) FTGEN(md)
  
  char _ft[] = "/";	/* default hl */
 @@ -22,10 +22,12 @@ char msg_ft[] = "/>";	/* ex message (is never '\n' terminated) */

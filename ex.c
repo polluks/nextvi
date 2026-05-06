@@ -940,7 +940,7 @@ static void *ec_num(char *loc, char *cmd, char *arg)
 {
 	if (cmd[1] == '?') {
 		ex_print(xpret ? xpret : "no error", msg_ft)
-		return NULL;
+		return *arg ? xpret : NULL;
 	}
 	char msg[128];
 	int arr[4] = {0, 0, -1, -1};

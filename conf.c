@@ -72,7 +72,7 @@ struct highlight hls[] = {
 	{_ft, NULL, A(RE1), 0, 1}, /* <-- optional, used by hlw if set */
 
 	{FT(c), NULL, A(CY1 | SYN_BD), 1, 2},
-	{FT(c), "(/\\*(?:(?!^\\*/).)*)|((?#-1)(?:(?!^/\\*).)*\\*/(?<\".*\\*/.*(?:\"|\\\\\n$)))",
+	{FT(c), "(/\\*(?:(?!^\\*/).)*)|((?:(?!^/\\*).)*\\*/(?#-1)(?<\".*\\*/.*(?:\"|\\\\\n$)))",
 		A(BL | SYN_IT, BL | SYN_BS, BL | SYN_BE)},
 	{FT(c), "\\<(?:signed|unsigned|char|short|int|[a-z0-9_]+_t|FILE|DIR|\
 long|f(?:loat|64|32)|double|void|enum|union|typedef|static|extern|register|struct|\
@@ -171,16 +171,13 @@ name|Number|Object|prototype|String|toString|undefined|valueOf))\\>", A(BL1, CY 
 	{FT(js), "`(?:[^`\\\\]|\\\\.)*`", A(MA)},
 
 	{FT(html), NULL, A(CY1 | SYN_BD), 1, 2},
-	{FT(html), "<(/)?[^>]+>", A(YE, MA1), 1},
-	{FT(html), "(\\{)[^}]*|(^[^{]*)?(\\})",
-		A(AY1 | SYN_BP, MA | SYN_BS, AY1, MA | SYN_BE), 1},
-	{FT(html), "([#.][ \t]*[a-zA-Z0-9_\\-]+\
-(?:(?:[, \t]*[#.][a-zA-Z0-9_\\-]+)?)+)(?:.?""?){1,20}\\{", A(IN, SYN_BD), 2},
+	{FT(html), "<(/)?(?:[^>](?:\".*?\")*(?:'.*?')*(?:<.*?>)*)+>", A(YE, MA1), 1},
+	{FT(html), "^[ \t.,#:a-zA-Z0-9_-]+(?=^\\{)", A(SYN_BD), 2},
 	{FT(html), NULL, A(RE1), 0, 1},
 	{FT(html), "(/\\*(?:(?!^\\*/).)*)|((?:(?!^/\\*).)*\\*/)",
-		A(MA | SYN_IT, MA | SYN_BS, MA | SYN_BE)},
+		A(MA | SYN_IT | SYN_OWR, MA | SYN_BS, MA | SYN_BE)},
 	{FT(html), "(<!--(?:(?!^-->).)*)|((?:(?!^<!--).)*-->)",
-		A(MA | SYN_IT, MA | SYN_BS, MA | SYN_BE)},
+		A(MA | SYN_IT | SYN_OWR, MA | SYN_BS, MA | SYN_BE)},
 	{FT(html), "\\<(?:accept|accesskey|align|allow|alt|async|\
 auto(?:capitalize|complete|focus|play)|background|content|\
 bgcolor|border(?:-box)?|buffered|challenge|charset|checked|cite|\
@@ -214,20 +211,21 @@ frame|frameset|image|isindex|keygen|listing|marquee|menuitem|\
 multicol|nextid|nobr|noembed|noframes|plaintext|spacer|\
 strike|tt|xmp|doctype|h1|h2|h3|h4|h5|h6|))\\>",
 	A(GR | SYN_OATT | SYN_OWR, 1, YE, CY | SYN_OATT | SYN_OWR, 2, YE, GR)},
-	{FT(html), "@\\<(?:media|import|keyframes|font-face|charset|supports|page|\
-namespace|document|viewport|counter-style|property|layer|container|scope|\
-starting-style|font-feature-values|color-profile)\\>", A(BL1 | SYN_BD)},
-	{FT(html), "::?\\<[a-z-]+\\>", A(MA1)},
+	{FT(html), "^[ \t]*@\\<[a-z-]+\\>", A(BL1 | SYN_BD)},
+	{FT(html), "::?\\<[a-z-]+(?=^[, \t{\\(])", A(MA1)},
 	{FT(html), "!important\\>", A(RE1 | SYN_BD)},
 	{FT(html), "\"(?:[^\"\\\\]|\\\\.)*\"", A(BL1)},
 	{FT(html), "'(?:[^'\\\\]|\\\\.)*'", A(MA)},
-	{FT(html), "#\\<[A-Fa-f0-9]+\\>", A(RE1)},
-	{FT(html), "[-+]?\\<(?:0[xX][0-9a-fA-F]+|[0-9]+(?:\\.[0-9]+)?\
-(?:em|rem|px|pt|pc|cm|mm|in|ch|ex|vw|vh|vmin|vmax|dvh|dvw|svh|svw|lvh|lvw|\
-fr|deg|rad|turn|grad|ms|s|hz|khz|dpi|dpcm|dppx|%|))\\>", A(RE1)},
-	{FT(html), "&[a-zA-Z0-9_]+;", A(MA)},
-	{FT(html), "([^\t -,.-/:-@[-^{-~]+:)(?:[ \t]*(fixed|absolute|relative)|.+?);",
-		A(IN, YE | SYN_OWR | SYN_EATT, 2, IN, AY1, MA1), 3},
+	{FT(html), "&[a-zA-Z0-9_#]+;", A(MA)},
+	{FT(html), "(\\{)[^}]*|(^[^{]*)?(\\}(?#-1)(?<\".*}.*\"))",
+		A(AY1 | SYN_BP, CY1 | SYN_BS, AY1, CY1 | SYN_BE)},
+	{FT(html), "(?:#\\<[A-Fa-f0-9]+\\>)|[-+]?\\<(?:0[xX][0-9a-fA-F]+|[0-9]+\
+(?:\\.[0-9]+)?(?:em|rem|px|pt|pc|cm|mm|in|ch|ex|vw|vh|vmin|vmax|dvh|dvw|svh|svw|lvh|lvw|\
+fr|deg|rad|turn|grad|ms|s|hz|khz|dpi|dpcm|dppx|%|))\\>", A(RE1 | SYN_ATT, 3, IN, AY1, YE), 1},
+	{FT(html), "^[^\t -,.-/:-@[-^{-~]+::?\\<[a-z-]+[, \t{]", A(IN), 3},
+	{FT(html), "((?:^[^\t -,.-/:-@[-^{-~]|[^\t -,.-/:-@[-^{-~](?#2)(?>^[ \t{]))\
+[^\t -,.-/:-@[-^{-~]*:)(?:[ \t]*(fixed|absolute|relative)|.+?)(?:;|\\}\n$)",
+		A(IN | SYN_EATT, 3, IN, AY1, CY1, YE | SYN_OWR | SYN_EATT, 2, IN, AY1, MA1), 3},
 
 	{FT(diff), NULL, A(CY1 | SYN_BD), 1, 2},
 	{FT(diff), "^-.*", A(RE)},

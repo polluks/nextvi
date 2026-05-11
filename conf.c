@@ -172,13 +172,13 @@ name|Number|Object|prototype|String|toString|undefined|valueOf))\\>", A(BL1, CY 
 
 	{FT(html), NULL, A(CY1 | SYN_BD), 1, 2},
 	{FT(html), "<(/)?(?:[^>](?:\".*?\")*(?:'.*?')*(?:<.*?>)*)+>", A(YE, MA1), 1},
-	{FT(html), "^[ \t.,#:a-zA-Z0-9_-]+(?=^\\{)", A(SYN_BD), 2},
+	{FT(html), "^(?:[ \t.,#*:a-zA-Z0-9_-]+(?:\\(.*\\))*(?:\\[.*\\])*[ \t+~>]?)*(?=^\\{)", A(WH1), 2},
 	{FT(html), NULL, A(RE1), 0, 1},
 	{FT(html), "(/\\*(?:(?!^\\*/).)*)|((?:(?!^/\\*).)*\\*/)",
 		A(MA | SYN_IT | SYN_OWR, MA | SYN_BS, MA | SYN_BE)},
 	{FT(html), "(<!--(?:(?!^-->).)*)|((?:(?!^<!--).)*-->)",
 		A(MA | SYN_IT | SYN_OWR, MA | SYN_BS, MA | SYN_BE)},
-	{FT(html), "\\<(?:accept|accesskey|align|allow|alt|async|\
+	{FT(html), "\\<(?#1)(?<^[-.])(?:accept|accesskey|align|allow|alt|async|\
 auto(?:capitalize|complete|focus|play)|background|content|\
 bgcolor|border(?:-box)?|buffered|challenge|charset|checked|cite|\
 class|code(?:base)|color|cols|colspan|content(?:editable)|\
@@ -209,10 +209,10 @@ shadow|template|acronym|applet|basefont|\
 bgsound|big|blink|center|command|element|font|\
 frame|frameset|image|isindex|keygen|listing|marquee|menuitem|\
 multicol|nextid|nobr|noembed|noframes|plaintext|spacer|\
-strike|tt|xmp|doctype|h1|h2|h3|h4|h5|h6|))\\>",
-	A(GR | SYN_OATT | SYN_OWR, 1, YE, CY | SYN_OATT | SYN_OWR, 2, YE, GR)},
+strike|tt|xmp|doctype|h1|h2|h3|h4|h5|h6|))\\>(?!^-)",
+	A(GR | SYN_OATT | SYN_OWR, 2, WH1, YE, CY | SYN_OATT | SYN_OWR, 3, YE, GR, WH1)},
 	{FT(html), "^[ \t]*@\\<[a-z-]+\\>", A(BL1 | SYN_BD)},
-	{FT(html), "::?\\<[a-z-]+(?=^[, \t{\\(])", A(MA1)},
+	{FT(html), "::?\\<[a-z-]+(?=^[, \t{\\(\\[])", A(MA1 | SYN_OATT | SYN_OWR, 1, WH1)},
 	{FT(html), "!important\\>", A(RE1 | SYN_BD)},
 	{FT(html), "\"(?:[^\"\\\\]|\\\\.)*\"", A(BL1)},
 	{FT(html), "'(?:[^'\\\\]|\\\\.)*'", A(MA)},
@@ -222,7 +222,7 @@ strike|tt|xmp|doctype|h1|h2|h3|h4|h5|h6|))\\>",
 	{FT(html), "(?:#\\<[A-Fa-f0-9]+\\>)|[-+]?\\<(?:0[xX][0-9a-fA-F]+|[0-9]+\
 (?:\\.[0-9]+)?(?:em|rem|px|pt|pc|cm|mm|in|ch|ex|vw|vh|vmin|vmax|dvh|dvw|svh|svw|lvh|lvw|\
 fr|deg|rad|turn|grad|ms|s|hz|khz|dpi|dpcm|dppx|%|))\\>", A(RE1 | SYN_ATT, 3, IN, AY1, YE), 1},
-	{FT(html), "^[^\t -,.-/:-@[-^{-~]+::?\\<[a-z-]+[, \t{]", A(IN), 3},
+	{FT(html), "^.*\\{", A(IN), 3},
 	{FT(html), "((?:^[^\t -,.-/:-@[-^{-~]|[^\t -,.-/:-@[-^{-~](?#2)(?>^[ \t{]))\
 [^\t -,.-/:-@[-^{-~]*:)(?:[ \t]*(fixed|absolute|relative)|.+?)(?:;|\\}\n$)",
 		A(IN | SYN_EATT, 3, IN, AY1, CY1, YE | SYN_OWR | SYN_EATT, 2, IN, AY1, MA1), 3},

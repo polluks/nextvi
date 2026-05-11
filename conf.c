@@ -182,7 +182,7 @@ name|Number|Object|prototype|String|toString|undefined|valueOf))\\>", A(BL1, CY 
 	{FT(html), "(<!--(?:(?!^-->).)*)|((?:(?!^<!--).)*-->)",
 		A(MA | SYN_IT, MA | SYN_BS, MA | SYN_BE)},
 	{FT(html), "\\<(?:accept|accesskey|align|allow|alt|async|\
-auto(?:capitalize|complete|focus|play)|background|\
+auto(?:capitalize|complete|focus|play)|background|content|\
 bgcolor|border(?:-box)?|buffered|challenge|charset|checked|cite|\
 class|code(?:base)|color|cols|colspan|content(?:editable)|\
 contextmenu|controls|coords|crossorigin|import|url|code|\
@@ -212,8 +212,8 @@ shadow|template|acronym|applet|basefont|\
 bgsound|big|blink|center|command|element|font|\
 frame|frameset|image|isindex|keygen|listing|marquee|menuitem|\
 multicol|nextid|nobr|noembed|noframes|plaintext|spacer|\
-strike|tt|xmp|doctype|h1|h2|h3|h4|h5|h6|\
-(fixed;|absolute;|relative;)))\\>", A(GR, CY, MA1)},
+strike|tt|xmp|doctype|h1|h2|h3|h4|h5|h6|))\\>",
+	A(GR | SYN_OATT | SYN_OWR, 1, YE, CY | SYN_OATT | SYN_OWR, 2, YE, GR)},
 	{FT(html), "@\\<(?:media|import|keyframes|font-face|charset|supports|page|\
 namespace|document|viewport|counter-style|property|layer|container|scope|\
 starting-style|font-feature-values|color-profile)\\>", A(BL1 | SYN_BD)},
@@ -226,11 +226,8 @@ starting-style|font-feature-values|color-profile)\\>", A(BL1 | SYN_BD)},
 (?:em|rem|px|pt|pc|cm|mm|in|ch|ex|vw|vh|vmin|vmax|dvh|dvw|svh|svw|lvh|lvw|\
 fr|deg|rad|turn|grad|ms|s|hz|khz|dpi|dpcm|dppx|%|))\\>", A(RE1)},
 	{FT(html), "&[a-zA-Z0-9_]+;", A(MA)},
-	{FT(html), "([^\t -,.-/:-@[-^{-~]+:).+?;",
-		A(IN, YE | SYN_OWR | SYN_EATT, 2, IN, AY1), 3},
-	{FT(html), ">([^<]*)<(?:/|[^>]*>([^<]*)<)",
-		A(SYN_IGN, SYN_OATT | SYN_OWR, 3, GR, CY, YE,
-			SYN_OATT | SYN_OWR, 3, GR, CY, YE), 4},
+	{FT(html), "([^\t -,.-/:-@[-^{-~]+:)(?:[ \t]*(fixed|absolute|relative)|.+?);",
+		A(IN, YE | SYN_OWR | SYN_EATT, 2, IN, AY1, MA1), 3},
 
 	{FT(diff), NULL, A(CY1 | SYN_BD), 1, 2},
 	{FT(diff), "^-.*", A(RE)},

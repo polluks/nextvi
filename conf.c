@@ -170,10 +170,8 @@ name|Number|Object|prototype|String|toString|undefined|valueOf))\\>", A(BL1, CY 
 	{FT(js), "\"(?:[^\"\\\\]|\\\\.)*\"", A(MA)},
 	{FT(js), "`(?:[^`\\\\]|\\\\.)*`", A(MA)},
 
-	{FT(html), NULL, A(CY1 | SYN_BD), 1, 2},
 	{FT(html), "<(/)?(?:[^>](?:\".*?\")*(?:'.*?')*(?:<.*?>)*)+>", A(YE, MA1), 1},
 	{FT(html), "^(?:[ \t.,#*:a-zA-Z0-9_-]+(?:\\(.*\\))*(?:\\[.*\\])*[ \t+~>]?)*(?=^\\{)", A(WH1), 2},
-	{FT(html), NULL, A(RE1), 0, 1},
 	{FT(html), "(/\\*(?:(?!^\\*/).)*)|((?:(?!^/\\*).)*\\*/)",
 		A(MA | SYN_IT | SYN_OWR, MA | SYN_BS, MA | SYN_BE)},
 	{FT(html), "(<!--(?:(?!^-->).)*)|((?:(?!^<!--).)*-->)",
@@ -206,7 +204,6 @@ lang|popover|spellcheck|style|tabindex|title|translate))\\>(?!^-)",
 	A(GR | SYN_OATT | SYN_OWR, 1, YE, CY | SYN_OATT | SYN_OWR, 3, YE, GR, WH1)},
 	{FT(html), "^[ \t]*@\\<[a-z-]+\\>", A(BL1 | SYN_BD)},
 	{FT(html), "::?\\<[a-z-]+(?=^[, \t{\\(\\[])", A(MA1 | SYN_OATT | SYN_OWR, 1, WH1)},
-	{FT(html), "!important\\>", A(RE1 | SYN_BD)},
 	{FT(html), "\"(?:[^\"\\\\]|\\\\.)*\"", A(BL1)},
 	{FT(html), "'(?:[^'\\\\]|\\\\.)*'", A(MA)},
 	{FT(html), "&[a-zA-Z0-9_#]+;", A(MA)},
@@ -215,10 +212,13 @@ lang|popover|spellcheck|style|tabindex|title|translate))\\>(?!^-)",
 	{FT(html), "(?:#\\<[A-Fa-f0-9]+\\>)|[-+]?\\<(?:0[xX][0-9a-fA-F]+|[0-9]+\
 (?:\\.[0-9]+)?(?:em|rem|px|pt|pc|cm|mm|in|ch|ex|vw|vh|vmin|vmax|dvh|dvw|svh|svw|lvh|lvw|\
 fr|deg|rad|turn|grad|ms|s|hz|khz|dpi|dpcm|dppx|%|))\\>", A(RE1 | SYN_ATT, 3, IN, AY1, YE), 1},
-	{FT(html), "^.*\\{", A(IN), 3},
-	{FT(html), "((?:^[^\t -,.-/:-@[-^{-~]|[^\t -,.-/:-@[-^{-~](?#2)(?>^[ \t{]))\
-[^\t -,.-/:-@[-^{-~]*:)(?:[ \t]*(fixed|absolute|relative)|.+?)(?:;|\\}\n$)",
+	{FT(html), "^[^{]*(?=^\\{)", A(IN), 3},
+	{FT(html), "((?:^[^\t -,.-/:-@[-^{-~]|[^\t -,.-/:-@[-^{-~](?#2)(?>^[ \t\\{]))\
+[^\t -,.-/:-@[-^{-~]*:)(?:[ \t]*(fixed|absolute|relative|.+!important)|.+?)(?:;|\\}\n$)",
 		A(IN | SYN_EATT, 3, IN, AY1, GR1, YE | SYN_OWR | SYN_EATT, 2, IN, AY1, MA1), 3},
+	{FT(html), NULL, A(CY1 | SYN_BD), 1, 2},
+	{FT(html), NULL, A(RE1), 0, 1},
+	{FT(html), NULL, A(AY | SYN_BGMK(RE1)), 0, 3},
 
 	{FT(diff), NULL, A(CY1 | SYN_BD), 1, 2},
 	{FT(diff), "^-.*", A(RE)},

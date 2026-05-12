@@ -190,17 +190,17 @@ onpageshow|onpaste|onpause|onplay|onplaying|onpopstate|onprogress|onratechange|o
 onresize|onscroll|onsearch|onseeked|onseeking|onselect|onstalled|onstorage|onsubmit|\
 onsuspend|ontimeupdate|ontoggle|onunload|onvolumechange|onwaiting|onwheel|open|optimum|\
 pattern|placeholder|popovertarget|popovertargetaction|poster|preload|readonly|rel|\
-required|reversed|rows|rowspan|sandbox|scope|selected|shape|size|sizes|span|src|\
-srcdoc|srclang|srcset|start|step|target|type|usemap|value|width|wrap|([dD](?:octype|OCTYPE)|\
-a|abbr|address|area|article|aside|audio|b|base|bdi|bdo|blockquote|body|br|button|canvas|\
-caption|cite|code|col|colgroup|data|datalist|dd|del|details|dfn|dialog|div|dl|dt|em|\
-embed|fieldset|figcaption|figure|footer|form|h[1-6]|head|header|hgroup|hr|html|i|iframe|\
-img|input|ins|kbd|label|legend|li|link|main|map|mark|menu|meta|meter|nav|noscript|object|\
-ol|optgroup|option|output|p|param|picture|pre|progress|q|rp|rt|ruby|s|samp|script|search|\
-section|select|small|source|span|strong|style|sub|summary|sup|svg|table|tbody|td|\
-template|textarea|tfoot|th|thead|time|title|tr|track|u|ul|var|video|wbr|accesskey|\
+required|reversed|rows|rowspan|sandbox|scope|selected|shape|size|sizes|span|src|accesskey|\
 class|contenteditable|data-[a-z]*|dir|draggable|enterkeyhint|hidden|id|inert|inputmode|\
-lang|popover|spellcheck|style|tabindex|title|translate))\\>(?!^-)",
+lang|popover|spellcheck|style(?=^=)|tabindex|title(?=^=)|translate|srcdoc|srclang|srcset|\
+start|step|target|type|usemap|value|width|wrap|([dD](?:octype|OCTYPE)|a|abbr|address|area|\
+article|aside|audio|b|base|bdi|bdo|blockquote|body|br|button|canvas|caption|cite|code|col|\
+colgroup|data|datalist|dd|del|details|dfn|dialog|div|dl|dt|em|embed|fieldset|figcaption|\
+figure|footer|form|h[1-6]|head|header|hgroup|hr|html|i|iframe|img|input|ins|kbd|label|\
+legend|li|link|main|map|mark|menu|meta|meter|nav|noscript|object|ol|optgroup|option|output|\
+p|param|picture|pre|progress|q|rp|rt|ruby|s|samp|script|search|section|select|small|source|\
+span|strong|style|sub|summary|sup|svg|table|tbody|td|template|textarea|tfoot|th|thead|time|\
+title|tr|track|u|ul|var|video|wbr))\\>(?!^-)",
 	A(GR | SYN_OATT | SYN_OWR, 1, YE, CY | SYN_OATT | SYN_OWR, 3, YE, GR, WH1)},
 	{FT(html), "^[ \t]*@\\<[a-z-]+\\>", A(BL1 | SYN_BD)},
 	{FT(html), "::?\\<[a-z-]+(?=^[, \t{\\(\\[])", A(MA1 | SYN_OATT | SYN_OWR, 1, WH1)},

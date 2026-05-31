@@ -31,7 +31,7 @@ index 45585e3..c201e8c 100644
  	{FT(c), "(\\?).+?(:)", A(SYN_IGN, YE | SYN_SATT, YE | SYN_SATT, 2, IN, CY1), 4},
  
 +	{FT(s), ";.*", A(BL | SYN_IT)},
-+	{FT(s), "[.]([a-zA-Z0-9_]+([ \t]*<.*>)?)", A(IN, SYN_BD)},
++	{FT(s), "[.]([a-zA-Z0-9_]+([ \t]*<.*>)?)", A(NA, SYN_BD)},
 +
  	{FT(roff), NULL, A(CY1 | SYN_BD), 1, 2},
  	{FT(roff), "^[.'][ \t]*(([sS][hH].*)|(de) (.*)|([^ \t\\\\]{2,}))?.*",
@@ -41,7 +41,7 @@ index 45585e3..c201e8c 100644
  	{FT(mk), "([A-Za-z_%.\\-]+):", A(IN, SYN_BD)},
  
 +	{FT(tcl), "#.*", A(BL | SYN_IT)},
-+	{FT(tcl), "\\$[\\{][a-zA-Z0-9_]+[\\}]", A(IN, SYN_BD)},
++	{FT(tcl), "\\$[\\{][a-zA-Z0-9_]+[\\}]", A(NA, SYN_BD)},
 +
  	{FT(sh), NULL, A(CY1 | SYN_BD), 1, 2},
  	{FT(sh), NULL, A(RE1), 0, 1},
